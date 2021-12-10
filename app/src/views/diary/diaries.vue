@@ -8,20 +8,20 @@
           <h2>The analyzed emotional status of the month is <span>{{ count.max }}</span></h2>
 
           <div class="barWrap">
-            
-              <div class="bar">
-                <div class="happy" :style="[{'width': `${count.happy}%`}]" v-if="count.happy">
-                  <span>{{ count.happy }}%</span><p><i class="xi-emoticon-happy-o"></i> happy</p>
-                </div>
-                <div class="sad" :style="[{'width': `${count.sad}%`}]" v-if="count.sad">
-                  <span>{{ count.sad }}%</span>
-                  <p><i class="xi-emoticon-sad-o"></i> sad</p>
-                </div>
-                <div class="angry" :style="[{'width': `${count.angry}%`}]" v-if="count.angry">
-                  <span>{{ count.angry }}%</span>
-                  <p><i class="xi-emoticon-devil-o"></i> angry</p>
-                </div>
+            <div class="bar">
+              <div class="happy" :style="[{'width': `${count.happy}%`}]" v-if="count.happy">
+                <span>{{ count.happy }}%</span>
+                <p><i class="xi-emoticon-happy-o"></i> happy</p>
               </div>
+              <div class="sad" :style="[{'width': `${count.sad}%`}]" v-if="count.sad">
+                <span>{{ count.sad }}%</span>
+                <p><i class="xi-emoticon-sad-o"></i> sad</p>
+              </div>
+              <div class="angry" :style="[{'width': `${count.angry}%`}]" v-if="count.angry">
+                <span>{{ count.angry }}%</span>
+                <p><i class="xi-emoticon-devil-o"></i> angry</p>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -51,21 +51,23 @@ export default {
     const store = useStore()
     const date = ref({ date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) })
     const count = ref({ happy: 0, sad: 0, angry: 0, count: 0, max: '' })
-    const attributes = computed(() => store.state.sortedDiaries[date.value.date].map(diary => ({
+    const attributes = computed(() => store.state.sortedDiaries[date.value.date]?.map(diary => ({
       dates: diary.createdAt,
       highlight: { color: colors[diary.result[0].sentiment], fillMode: 'light' },
       keyword: diary.result[0].sentiment
     })))
     
     const countChange = (list) => {
-      count.value = { happy: 0, sad: 0, angry: 0, count: list.length, max: '' }
-      for (const attr of list) { count.value[attr.keyword] = (count.value[attr.keyword] || 0) + 1 }
-      count.value = {
-        happy: Math.round((count.value.happy / count.value.count) * 100),
-        sad: Math.round((count.value.sad / count.value.count) * 100),
-        angry: Math.round((count.value.angry / count.value.count) * 100),
-        count: list.length,
-        max: Object.keys(count.value).find(key => count.value[key] === Math.max(...[count.value.happy, count.value.sad, count.value.angry]))
+      count.value = { happy: 0, sad: 0, angry: 0, count: list?.length, max: '' }
+      if (list) {
+        for (const attr of list) { count.value[attr.keyword] = (count.value[attr.keyword] || 0) + 1 }
+        count.value = {
+          happy: Math.round((count.value.happy / count.value.count) * 100),
+          sad: Math.round((count.value.sad / count.value.count) * 100),
+          angry: Math.round((count.value.angry / count.value.count) * 100),
+          count: list.length,
+          max: Object.keys(count.value).find(key => count.value[key] === Math.max(...[count.value.happy, count.value.sad, count.value.angry]))
+        }
       }
     }
     countChange(attributes.value)

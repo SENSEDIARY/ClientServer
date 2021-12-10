@@ -106,7 +106,6 @@ export default {
 
     }
 
-
     p {
       margin-top: 3em;
       color: #777;
@@ -114,7 +113,7 @@ export default {
       font-size: 16px;
       letter-spacing: 0.05rem;
       font-weight: 400;
-      line-height:1.6;
+      line-height: 1.6;
     }
 
   }

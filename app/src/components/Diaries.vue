@@ -20,7 +20,7 @@
       </div>
 
       <div class="empty" v-if="!curPageDiaries.length">
-        <h2>There is no written diary.<br>Write a new diary.</h2>
+        <h2>There is no written diary.</h2>
       </div>
     </transition-group>
 
